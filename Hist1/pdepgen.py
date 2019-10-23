@@ -32,17 +32,17 @@ def get_imports(path):
         for n in node.names:
             yield Import(module, n.name.split('.'), n.asname)
    
-def get_graph():
+def get_graph(dirpath):
     files = []
     dependency_array = []
     #Getting all available local user-defined .py files
-    for file in os.listdir("./"):
+    for file in os.listdir(dirpath):
         if filter_non_py(file) == 1:
             files.append(file[:-3])
 
-    for file in os.listdir("./"):
+    for file in os.listdir(dirpath):
         if filter_non_py(file) == 1:
-            for imp in get_imports(file):
+            for imp in get_imports(dirpath + file):
                 if str(imp[0]) == "[]":
                     module = str(imp[1])
                     module = module[2:-2]
