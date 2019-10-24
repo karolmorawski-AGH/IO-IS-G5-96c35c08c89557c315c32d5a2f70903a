@@ -18,6 +18,7 @@ def filter_non_py(path):
 Import = namedtuple("Import", ["module", "name", "alias"])
 
 def get_imports(path):
+    print(path)
     with open(path) as fh:        
        root = ast.parse(fh.read(), path)
 
@@ -32,26 +33,26 @@ def get_imports(path):
         for n in node.names:
             yield Import(module, n.name.split('.'), n.asname)
    
-def get_graph():
+def get_graph(directory):
     files = []
     dependency_array = []
     #Getting all available local user-defined .py files
-    for file in os.listdir("./"):
+    for file in os.listdir(directory):
         if filter_non_py(file) == 1:
             files.append(file[:-3])
 
-    for file in os.listdir("./"):
+    for file in os.listdir(directory):
         if filter_non_py(file) == 1:
-            for imp in get_imports(file):
+            for imp in get_imports(directory + "/" + file):
                 if str(imp[0]) == "[]":
                     module = str(imp[1])
                     module = module[2:-2]
                     if module in files:
-                        dependency_array.append([file  + "\n(" + str(os.stat(file).st_size) + ")", module + ".py\n(" + str(os.stat(module + ".py").st_size) + ")", count_func(module+".py")])
+                        dependency_array.append([file  + "\n(" + str(os.stat(directory + "/" + file).st_size) + ")", module + ".py\n(" + str(os.stat(directory + "/" + module + ".py").st_size) + ")", count_func(directory + "/" + module + ".py")])
                 else:
                     module = str(imp[0])
                     module = module[2:-2]
                     if module in files:
-                        dependency_array.append([file  + "(" + str(os.stat(file).st_size) + ")", module + ".py\n(" + str(os.stat(module + ".py").st_size) + ")", 1])
-    
+                        dependency_array.append([file  + "\n(" + str(os.stat(directory + "/" + file).st_size) + ")", module + ".py\n(" + str(os.stat(directory + "/" + module + ".py").st_size) + ")", 1])
+ 
     return dependency_array
