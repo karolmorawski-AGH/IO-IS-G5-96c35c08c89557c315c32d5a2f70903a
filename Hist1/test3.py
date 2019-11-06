@@ -8,3 +8,4 @@ def trzy_i_pol():
     print("JESTEM FUNKCJA Z test3 a to napis "+nap)
 
 test2.druga()
+test1.fu()
