@@ -30,8 +30,15 @@ def drawGraph(array):
             for j in range (0, len(array2[i-1])):
                 G.add_edge(array2[i-1][j], array[i][0] + "\n" + str(sum[i]), length="")
 
+    color_map=[]
+    for node in G:
+        if ".py" not in node:
+            color_map.append('lightblue')
+        else:
+            color_map.append('lightgreen')
+
     pos = nx.planar_layout(G)
-    nx.draw(G,pos,edge_color='black',width=0.5, node_size=1000,node_color='lightgreen', with_labels=True, font_size = 10)
+    nx.draw(G,pos,edge_color='black',width=0.5, node_size=1000,node_color=color_map, with_labels=True, font_size = 10)
     edge_labels=dict([((u,v,),d['length']) for u,v,d in G.edges(data=True)])
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, label_pos=0.4)
     plt.show()
