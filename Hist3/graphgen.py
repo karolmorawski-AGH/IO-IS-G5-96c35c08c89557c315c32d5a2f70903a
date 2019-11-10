@@ -19,20 +19,20 @@ Import = namedtuple("Import", ["module", "name", "alias"])
 
 def get_imports(path):
     print(path)
-    with open(path) as fh:        
+    with open(path) as fh:
        root = ast.parse(fh.read(), path)
 
     for node in ast.iter_child_nodes(root):
         if isinstance(node, ast.Import):
             module = []
-        elif isinstance(node, ast.ImportFrom):  
+        elif isinstance(node, ast.ImportFrom):
             module = node.module.split('.')
         else:
             continue
 
         for n in node.names:
             yield Import(module, n.name.split('.'), n.asname)
-   
+
 def get_graph(directory):
     files = []
     dependency_array = []
@@ -54,7 +54,7 @@ def get_graph(directory):
                     module = module[2:-2]
                     if module in files:
                         dependency_array.append([file  + "\n(" + str(os.stat(directory + "/" + file).st_size) + ")", module + ".py\n(" + str(os.stat(directory + "/" + module + ".py").st_size) + ")", 1])
- 
+
     return dependency_array
 
 #Getting func/methods names
@@ -76,7 +76,7 @@ def get_func_list(filepath):
 
     for function in functions:
         show_info(function, func_array)
-    
+
     return func_array
 
 def get_graph_func(directory):
@@ -87,27 +87,15 @@ def get_graph_func(directory):
     for file in os.listdir(directory):
         if filter_non_py(file) == 1:
             files.append(file[:-3])
-    
+
     for file in os.listdir(directory):
         declared_f.append(get_func_list(file))
         called_f.append(list_func_calls(file))
-    #Called funcs                   
-    '''
-    print("Declared:\n\n")
-    i = 0
-    while i < len(declared_f):
-        print(declared_f[i])
-        i = i + 1
-    print("\n\nCalled:\n")
-    i = 0
-    while i < len(called_f):
-        print(called_f[i])
-        i = i + 1
-    '''
+
 
     w = len(called_f) + 1
     h = len(declared_f) + 1
-    Matrix = [["" for x in range(w)] for y in range(h)] 
+    Matrix = [["" for x in range(w)] for y in range(h)]
 
 
     module_array = []
@@ -126,11 +114,11 @@ def get_graph_func(directory):
     while i <  len(module_array)+1:
         Matrix[i][0] = module_array[i-1]
         i = i + 1
-            
+
     i = 1
-    while i < len(Matrix[0]):
+    while i < len(Matrix):
         j = 1
-        while j < len(Matrix):
+        while j < len(Matrix[i]):
             if i == j:
                 Matrix[i][j] = "0"
             else:
@@ -140,12 +128,28 @@ def get_graph_func(directory):
             j = j+1
         i=i+1
 
+    #Removing first index of declared functions - frontend requirement
+    i = 0
+    while i < len(declared_f):
+        declared_f[i].pop(0)
+        i = i+1
 
-    print(Matrix)
+    #Adding '.py' to module names - frontend requirement - useless
+    i = 1
+    while i < len(Matrix):
+        #since directional graph representation in this case is square matrix no j iterator
+        Matrix[0][i] = Matrix[0][i] + ".py"
+        Matrix[i][0] = Matrix[i][0] + ".py"
+        i = i + 1
+
+    returnedMatrix = []
+    returnedMatrix.append(Matrix)
+    returnedMatrix.append(declared_f)
+    return returnedMatrix
 
 
 def get_number_of_calls(calling, declared, called_f, declared_f):
-    
+
     #find calling array
     #print(called_f)
     call_desired = []
@@ -153,6 +157,14 @@ def get_number_of_calls(calling, declared, called_f, declared_f):
     while i < len(called_f):
         if called_f[i][0] == calling:
             call_desired = called_f[i]
+            break
+        i = i + 1
+
+    #Removing module aliases in func calls
+    i = 0
+    while i < len(call_desired):
+        if '.' in call_desired[i]:
+            call_desired[i] = call_desired[i].split(".")[1]
         i = i + 1
 
     declared_desired = []
@@ -160,11 +172,18 @@ def get_number_of_calls(calling, declared, called_f, declared_f):
     while i < len(declared_f):
         if declared_f[i][0] == declared:
             declared_desired = declared_f[i]
+            break
         i = i + 1
-    
-    #TODO count how much from call_desired names matches declared desired
 
-    return "-1"
+
+    i = 0
+    calls_num = 0;
+    while i < len(call_desired):
+        if call_desired[i] in declared_desired:
+            calls_num = calls_num + 1
+        i = i + 1
+
+    return str(calls_num)
 
 
 from collections import deque
@@ -205,10 +224,3 @@ def list_func_calls(filename):
             func_calls.append(callvisitor.name)
 
     return func_calls
-
-
-#print(list_func_calls("graphgen.py"))
-#list_func_calls("drawGraph", "pgraphdraw.py")
-#print(inspect.stack()[1].function)
-#pythonw -m trace -l graphgen.py 
-get_graph_func("./")

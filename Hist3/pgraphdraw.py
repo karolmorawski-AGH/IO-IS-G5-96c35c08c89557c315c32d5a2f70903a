@@ -1,12 +1,17 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 
-def drawGraph(array):
+def drawGraph(matrix):
 
+    array = matrix[0]
+    array2 = matrix[1]
+
+    '''
     array = [["",        "main.py", "graphgen.py", "pgraphdraw.py"],
-             ["main.py",       "0",      "4",           "1"],
+             ["main.py",       "0",      "1",           "1"],
              ["graphgen.py",   "0",      "0",           "0"],
              ["pgraphdraw.py", "0",      "0",           "0"]]
+    '''
 
     G = nx.DiGraph()
     sum = [0] * len(array)
@@ -20,10 +25,12 @@ def drawGraph(array):
             if i != j and array[i][j] != "0":
                 G.add_edge(array[i][0] + "\n" + str(sum[i]), array[0][j] + "\n" + str(sum[j]), length=array[i][j])
 
+    '''
     array2 = [[],
               ["count_func", "filter_non_py", "get_imports", "get_graph",
                "show_info", "get_func_list", "list_func_calls", "get_graph_func"],
               ["drawGraph"]]
+    '''
 
     for i in range(1, len(array)):
         if len(array2[i-1]) > 0:
