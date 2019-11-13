@@ -2,10 +2,13 @@ import pgraphdraw as pg
 import pdepgen as pd
 import sys
 
-directory = "./"
+# Default directory
+DIR = "./"
+# If called with args then use those args as parameters for DIR
 if len(sys.argv)>1:
     directory = sys.argv[1]
 
-dependency_array = pd.get_graph(directory)
-print(dependency_array)
-pg.drawGraph(dependency_array)
+graph_representation = pd.GraphGenerator("./")
+print(graph_representation.get_graph())
+
+#pg.drawGraph(dependency_array)

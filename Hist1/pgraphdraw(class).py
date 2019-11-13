@@ -3,7 +3,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 class DrawGraph:
-    G = nx.DiGraph()
+
     pos = self.nx.spring_layout(G)
     def drawGraph(x):   
         for i in range(0, len(x)):
