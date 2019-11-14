@@ -8,4 +8,4 @@ if len(sys.argv)>1:
 
 dependency_array = pd.get_graph_func(directory)
 #print(dependency_array)
-pg.drawGraph(dependency_array)
+pg.draw_graph(dependency_array)

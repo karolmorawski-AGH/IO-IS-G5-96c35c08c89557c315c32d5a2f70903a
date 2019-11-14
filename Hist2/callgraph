@@ -1,0 +1,2 @@
+#!/bin/bash
+`pycallgraph -b graphviz -- $1`
