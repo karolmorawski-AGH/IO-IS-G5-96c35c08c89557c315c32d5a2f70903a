@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import graph_generator as pd
 
 # SUPER DOKUMENTACJA:
-# This module contains DrawGraph class with methods corresponding to drawing desired type of graph
+# This module contains DrawGraph class with methods corresponding to drawing specific type of graph
 # Uses graph_generator module methods for getting graph representations and then interprets them
 # accordingly
 
