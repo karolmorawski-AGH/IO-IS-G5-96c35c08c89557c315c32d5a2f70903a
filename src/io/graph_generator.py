@@ -3,13 +3,8 @@ import ast
 from collections import namedtuple
 from collections import deque
 
-# SUPER DOKUMENTACJA:
 # This module contains all classes and methods needed to create appropriate graph representation
 # then graph_sketcher handles drawing graphical representation of graph
-
-# TODO
-# second story
-# actually finishing this
 
 class GraphGenerator:
     # Path to desired directory with modules (default is current directory)
@@ -32,6 +27,8 @@ class GraphGenerator:
     def filter_non_py(self, path):
         if ".py" in path:
             return 1
+        elif ".pyc" in path:
+            return 0
         else:
             return 0
 
@@ -126,11 +123,11 @@ class GraphGenerator:
         declared_f = []
         called_f = []
         # Getting all available local user-defined .py files
-        for file in os.listdir(self.directory):
+        for file in os.listdir(self.dirpath):
             if GraphGenerator.filter_non_py(file) == 1:
                 files.append(file[:-3])
 
-        for file in os.listdir(self.directory):
+        for file in os.listdir(self.dirpath):
             declared_f.append(GraphGenerator.get_func_list(file))
             called_f.append(GraphGenerator.list_func_calls(file))
 
