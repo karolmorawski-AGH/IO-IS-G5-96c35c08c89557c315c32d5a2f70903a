@@ -326,5 +326,3 @@ class FuncCallVisitor(ast.NodeVisitor):
         except AttributeError:
             self.generic_visit(node)
 
-test = ModuleGraphGenerator("./")
-print(test.get_graph())

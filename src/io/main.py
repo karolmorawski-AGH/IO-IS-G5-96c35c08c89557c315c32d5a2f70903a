@@ -22,36 +22,36 @@ while exit_condition == '0':
     # 1
     print("[1]:\tDraw\t", end="")
     print("\033[1;32;33mFILE" + '\033[0m', end="")
-    print("\t\t     relationship diagram")
+    print("\t\t\t\t\trelationship diagram")
     # 2
     print("[2]:\tDraw\t", end="")
     print("\033[1;32;96mMETHOD" + '\033[0m', end="")
-    print("\t\t     relationship diagram")
+    print("\t\t\t\t\trelationship diagram")
     # 3
     print("[3]:\tDraw\t", end="")
     print("\033[1;35;35mMODULE" + '\033[0m', end="")
-    print("\t\t     relationship diagram")
+    print("\t\t\t\t\trelationship diagram")
     # 4
     print("[4]:\tDraw\t", end="")
     print("\033[1;32;33mFILE" + '\033[0m', end=" ")
     print("+ " + "\033[1;32;96mMETHOD" + '\033[0m', end="")
-    print("\t   relationship diagram")
+    print("\t\t\trelationship diagram")
     # 5
     print("[5]:\tDraw\t", end="")
     print("\033[1;32;33mFILE" + '\033[0m', end=" ")
     print("+ " + "\033[1;32;35mMODULE" + '\033[0m', end="")
-    print("\t   relationship diagram")
+    print("\t\t\trelationship diagram")
     # 6
     print("[6]:\tDraw\t", end="")
     print("\033[1;32;96mMETHOD" + '\033[0m', end=" ")
     print("+ " + "\033[1;32;35mMODULE" + '\033[0m', end="")
-    print("\t   relationship diagram")
+    print("\t\t\trelationship diagram")
     # 7
     print("[7]:\tDraw\t", end="")
     print("\033[1;32;33mFILE" + '\033[0m', end=" ")
     print("+ " + "\033[1;32;96mMETHOD" + '\033[0m', end=" ")
     print("+ " + "\033[1;32;35mMODULE" + '\033[0m', end="")
-    print(" relationship diagram")
+    print("\trelationship diagram")
     # Exit
     print("Type q to exit the program")
 

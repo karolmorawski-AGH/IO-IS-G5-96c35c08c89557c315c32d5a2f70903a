@@ -75,7 +75,3 @@ class DrawGraph:
         edge_labels = dict([((u, v,), d['length']) for u, v, d in graphx.edges(data=True)])
         nx.draw_networkx_edge_labels(graphx, pos, edge_labels=edge_labels, label_pos=0.4)
         plt.show()
-
-
-test = DrawGraph("./")
-test.draw_module_graph()
