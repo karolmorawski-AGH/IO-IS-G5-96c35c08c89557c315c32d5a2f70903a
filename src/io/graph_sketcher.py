@@ -10,16 +10,17 @@ import graph_generator as gg
 class DrawGraph:
     # Default dirpath and gg class
     dirpath = "./"
-    graph_gen = gg.GraphGenerator("./")
+
 
     # Constructor
     def __init__(self, dirpath):
         self.dirpath = dirpath
-        self.graph_gen = gg.GraphGenerator(dirpath)
+
 
     # Draws file relationship graph
     def draw_file_graph(self):
-        x = self.graph_gen.get_graph()
+        file_graph_gen = gg.FileGraphGenerator(self.dirpath)
+        x = file_graph_gen.get_graph()
 
         G = nx.DiGraph()
         for i in range(0, len(x)):
@@ -39,13 +40,12 @@ class DrawGraph:
 
     def draw_module_graph(self):
 
-        array = self.graph_gen.get_graph_func()[0]
-        array2 = self.graph_gen.get_graph_func()[1]
+        module_graph_gen = gg.ModuleGraphGenerator(self.dirpath)
 
-        # TODO Array 2 returns empties
+        array = module_graph_gen.get_graph()[0]
+        array2 = module_graph_gen.get_graph()[1]
 
         graphx = nx.DiGraph()
-        pos = nx.spring_layout(graphx)
         sum = [0] * len(array)
 
         for i in range(1, len(array)):
@@ -55,7 +55,8 @@ class DrawGraph:
         for i in range(1, len(array)):
             for j in range(1, len(array)):
                 if i != j and array[i][j] != "0":
-                    graphx.add_edge(array[i][0] + "\n" + str(sum[i]), array[0][j] + "\n" + str(sum[j]), length=array[i][j])
+                    graphx.add_edge(array[i][0] + "\n" + str(sum[i]), array[0][j] + "\n" + str(sum[j]),
+                                    length=array[i][j])
 
         for i in range(1, len(array)):
             if len(array2[i - 1]) > 0:
@@ -69,9 +70,8 @@ class DrawGraph:
             else:
                 color_map.append('lightgreen')
 
-
-        nx.draw(graphx, pos, edge_color='black', width=0.5, node_size=1000, node_color=color_map, with_labels=True,
-                font_size=10)
+        pos = nx.spring_layout(graphx)
+        nx.draw(graphx, pos, edge_color='black', width=0.5, node_size=1000, node_color=color_map, with_labels=True, font_size=10)
         edge_labels = dict([((u, v,), d['length']) for u, v, d in graphx.edges(data=True)])
         nx.draw_networkx_edge_labels(graphx, pos, edge_labels=edge_labels, label_pos=0.4)
         plt.show()
