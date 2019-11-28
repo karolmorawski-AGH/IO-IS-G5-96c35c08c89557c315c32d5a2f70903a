@@ -34,7 +34,24 @@ class DrawGraph:
 
     # Draws method relationship graph
     def draw_method_graph(self):
-        pass
+        module_graph_gen = gg.ModuleGraphGenerator(self.dirpath)
+        files = module_graph_gen.get_files()
+        func = []
+        for i in range(0,len(files)):
+            func+=module_graph_gen.get_func_list(files[i])
+        print(func)
+
+        G = nx.DiGraph()
+        for i in range(0, len(func)):
+            G.add_node(func[i])
+        pos = nx.spring_layout(G)
+        nx.draw(G, pos, edge_color='black', width=1, node_size=1000, node_color='lightblue', with_labels=True)
+        edge_labels = dict([((u, v,), d['length']) for u, v, d in G.edges(data=True)])
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, label_pos=0.2)
+        plt.show()
+
+
+
 
     # Draws file relationship graph
 

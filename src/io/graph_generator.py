@@ -134,6 +134,13 @@ class ModuleGraphGenerator(IGraphGenerator):
     def __init__(self, dirpath):
         self.dirpath = dirpath
 
+    def get_files(self):
+        files=[]
+        for file in os.listdir(self.dirpath):
+            if self.filter_non_py(file) == 1:
+                files.append(file[:])
+        return files
+
     # Returns graph representation for use in Sketcher
     def get_graph(self):
         files = []
