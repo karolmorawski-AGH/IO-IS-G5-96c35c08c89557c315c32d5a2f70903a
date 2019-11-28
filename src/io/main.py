@@ -52,8 +52,11 @@ while exit_condition == '0':
     print("+ " + "\033[1;32;96mMETHOD" + '\033[0m', end=" ")
     print("+ " + "\033[1;32;35mMODULE" + '\033[0m', end="")
     print("\trelationship diagram")
+    # 8
+    print("[8]:\tDraw\t", end="")
+    print("Story 6",end=" ")
     # Exit
-    print("Type q to exit the program")
+    print("\nType q to exit the program")
 
     choice = input("\n:")
 
@@ -63,8 +66,8 @@ while exit_condition == '0':
         input("Press enter to continue...")
     elif choice == "2":
         print("\nGraph generated")
+	graphSketcher.draw_method_graph()
         input("Press enter to continue...")
-        graphSketcher.draw_method_graph()
     elif choice == "3":
         print("\nGraph generated")
         graphSketcher.draw_module_graph()
@@ -80,6 +83,10 @@ while exit_condition == '0':
         input("Press enter to continue...")
     elif choice == "7":
         print("\nGraph generated")
+        input("Press enter to continue...")
+    elif choice == "8":
+        print("\nGraph generated")
+        graphSketcher.hist6()
         input("Press enter to continue...")
     elif choice == "q":
         exit(0)

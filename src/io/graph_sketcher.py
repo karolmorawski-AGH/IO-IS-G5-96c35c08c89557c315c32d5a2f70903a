@@ -92,3 +92,29 @@ class DrawGraph:
         edge_labels = dict([((u, v,), d['length']) for u, v, d in graphx.edges(data=True)])
         nx.draw_networkx_edge_labels(graphx, pos, edge_labels=edge_labels, label_pos=0.4)
         plt.show()
+
+    def hist6(self):
+
+        module_graph_gen = gg.ModuleGraphGenerator(self.dirpath)
+
+        array = module_graph_gen.get_graph()[0]
+        array2 = module_graph_gen.get_graph()[1]
+        graphx = nx.DiGraph()
+        for i in range(1,len(array)):
+            graphx.add_node(array[i][0])
+
+        for i in range(1, len(array)):
+            if len(array2[i - 1]) > 0:
+                for j in range(0, len(array2[i - 1])):
+                    graphx.add_edge(array2[i - 1][j], array[i][0])
+
+        color_map = []
+        for node in graphx:
+            if ".py" not in node:
+                color_map.append('lightblue')
+            else:
+                color_map.append('lightgreen')
+
+        pos = nx.planar_layout(graphx)
+        nx.draw(graphx, pos, edge_color='black', width=0.5, node_size=1000, node_color=color_map, with_labels=True, font_size=10)
+        plt.show()
