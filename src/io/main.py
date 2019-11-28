@@ -86,7 +86,7 @@ while exit_condition == '0':
         input("Press enter to continue...")
     elif choice == "8":
         print("\nGraph generated")
-        graphSketcher.hist6()
+        graphSketcher.draw_file_method_graph_direct()
         input("Press enter to continue...")
     elif choice == "q":
         exit(0)
