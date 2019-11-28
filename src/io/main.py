@@ -66,7 +66,7 @@ while exit_condition == '0':
         input("Press enter to continue...")
     elif choice == "2":
         print("\nGraph generated")
-	graphSketcher.draw_method_graph()
+        graphSketcher.draw_method_graph()
         input("Press enter to continue...")
     elif choice == "3":
         print("\nGraph generated")

@@ -288,13 +288,6 @@ class ModuleGraphGenerator(IGraphGenerator):
                 break
             i = i + 1
 
-
-        print(declared)
-        print(declared_desired)
-        print(calling)
-        print(call_desired)
-        print("\n\n")
-
         i = 0
         calls_num = 0;
         while i < len(call_desired):

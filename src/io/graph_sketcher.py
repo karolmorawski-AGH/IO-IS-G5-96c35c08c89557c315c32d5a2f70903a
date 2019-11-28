@@ -39,7 +39,6 @@ class DrawGraph:
         func = []
         for i in range(0,len(files)):
             func+=module_graph_gen.get_func_list(files[i])
-        print(func)
 
         G = nx.DiGraph()
         for i in range(0, len(func)):
