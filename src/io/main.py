@@ -54,7 +54,9 @@ while exit_condition == '0':
     print("\trelationship diagram")
     # 8
     print("[8]:\tDraw\t", end="")
-    print("Story 6",end=" ")
+    print("\033[1;32;33mFILE" + '\033[0m', end=" ")
+    print("+ " + "\033[1;32;97mFUNCTION" + '\033[0m', end=" ")
+    print("\t\trelationship diagram")
     # Exit
     print("\nType q to exit the program")
 

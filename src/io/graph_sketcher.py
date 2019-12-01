@@ -151,9 +151,6 @@ class DrawGraph:
         # Connecting file to modules
         #graphx.add_edge(x[0][0], array[0][1], length="")
 
-
-
-
         color_map = []
         for node in graphx:
             if ".py" not in node:
@@ -192,13 +189,8 @@ class DrawGraph:
             if ".py" not in node:
                 color_map.append('lightblue')
             else:
-                color_map.append('lightgreen')
+                color_map.append('#fff989')
 
         pos = nx.planar_layout(graphx)
         nx.draw(graphx, pos, edge_color='black', width=0.5, node_size=1000, node_color=color_map, with_labels=True, font_size=10)
         plt.show()
-
-
-
-test = DrawGraph("./")
-test.draw_file_module_graph()
