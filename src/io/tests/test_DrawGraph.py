@@ -1,5 +1,6 @@
 import unittest
 import sys
+sys.path.append('../')
 from graph_sketcher import DrawGraph
 
 class TestDrawGraph(unittest.TestCase):
