@@ -1,6 +1,5 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import graph_generator as gg
 
 
 # This module contains DrawGraph class with methods corresponding to drawing specific type of graph

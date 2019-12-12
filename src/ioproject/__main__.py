@@ -1,12 +1,12 @@
 import sys
-import graph_sketcher as gs
+from .graph_sketcher import DrawGraph
 
 directory = "./"
 if len(sys.argv) > 1:
     directory = sys.argv[1]
 
 # Creating drawer class which contains methods used below in the dynamic menu
-graphSketcher = gs.DrawGraph(directory)
+graphSketcher = DrawGraph(directory)
 
 # menu
 exit_condition = '0'

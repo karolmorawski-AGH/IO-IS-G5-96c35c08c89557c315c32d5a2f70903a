@@ -1,7 +1,7 @@
 import unittest
 import sys
 sys.path.append('../')
-from graph_generator import FuncCallVisitor
+from src.ioproject import FuncCallVisitor
 
 
 class TestFuncCallVisitor(unittest.TestCase):

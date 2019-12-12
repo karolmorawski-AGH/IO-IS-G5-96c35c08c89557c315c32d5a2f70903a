@@ -1,7 +1,7 @@
 import unittest
 import sys
 sys.path.append('../')
-from graph_sketcher import DrawGraph
+from src.ioproject import DrawGraph
 
 class TestDrawGraph(unittest.TestCase):
     directory = "./"

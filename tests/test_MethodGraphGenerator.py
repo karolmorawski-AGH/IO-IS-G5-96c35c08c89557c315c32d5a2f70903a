@@ -1,7 +1,7 @@
 import unittest
 import sys
 sys.path.append('../')
-from graph_generator import MethodGraphGenerator
+from src.ioproject import MethodGraphGenerator
 
 class TestMethodGraphGenerator(unittest.TestCase):
     dirpath = "./"
