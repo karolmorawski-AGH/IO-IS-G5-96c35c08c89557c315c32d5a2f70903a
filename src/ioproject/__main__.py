@@ -1,5 +1,8 @@
 import sys
-from .graph_sketcher import DrawGraph
+
+print('__file__={0:<35} | __name__={1:<20} | __package__={2:<20}'.format(__file__, __name__, str(__package__)))
+
+from src.ioproject.graph_sketcher import DrawGraph
 
 directory = "./"
 if len(sys.argv) > 1:

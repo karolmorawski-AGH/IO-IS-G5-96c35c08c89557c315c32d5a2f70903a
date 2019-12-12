@@ -1,4 +1,4 @@
-import graph_generator
+import src.ioproject.graph_generator
 import abc
 
 # This module contains all classes and methods needed for graph export to Visual Paradigm
