@@ -1,7 +1,11 @@
 import unittest
 import sys
+
+from _ast import Call
+
 sys.path.append('../')
 from src.ioproject import FuncCallVisitor
+from collections import deque
 
 
 class TestFuncCallVisitor(unittest.TestCase):
@@ -13,16 +17,22 @@ class TestFuncCallVisitor(unittest.TestCase):
         pass
 
     def test_init(self):
-        pass
+        self.assertTrue(isinstance(self.funccv.name, deque))
 
     def test_name(self):
-        pass
+        self.funccv._name.append("foo")
+        self.funccv._name.append("baz")
+        self.assertEqual(self.funccv.name, ".foobaz")
 
     def test_visit_Name(self):
-        pass
+        node = Call()
+        node.id = "fname"
+        self.funccv.visit_Name(node)
+        self.assertEqual("".join(self.funccv._name), "fname")
 
     def test_visit_Attribute(self):
-        pass
-
-if __name__ == '__main__':
-    unittest.main()
+        node = Call()
+        node.attr = "attr"
+        node.value.id = "valueid"
+        self.funccv.visit_Name(node)
+        self.assertEqual("".join(self.funccv._name), "valueidattr")
