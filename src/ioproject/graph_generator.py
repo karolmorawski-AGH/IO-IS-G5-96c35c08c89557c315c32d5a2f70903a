@@ -117,13 +117,102 @@ class MethodGraphGenerator(IGraphGenerator):
     def __init__(self, dirpath):
         self.dirpath = dirpath
 
-    # Default constructor
-    def __init__(self):
-        self.dirpath = "./"
-
     # Returns graph representation for use in Sketcher
     def get_graph(self):
+        files = []
+        declared_f = []
+
+        # Saving all available local user-defined .py files to files[]
+        for file in os.listdir(self.dirpath):
+            if ModuleGraphGenerator.filter_non_py(file) == 1 and file:
+                files.append(file[:-3])
+
+        # Dokumentacja w komentarzu
+        # Only declared functions/methods are considered. The goal is to generate dirgraph representation
+        # where edge values are number of calls to a function/method from another function/method
+        # Calls from __main__ not to be considered.
+        #                           C A L L E D             node value
+        #                        fun1()  fun2()  fun3()     _________
+        #      DEC-          fun1()   0       2       5     2+5+0 = 7
+        #      LARED         fun2()   1       1       0     1+1+0 = 2
+        #                    fun3()   2       0       0     2+0+0 = 2
+        #
+        # Declared functions/methods are essentially graph nodes and node values are calculated as pictured above.
+
+        # Getting all declared functions
+        for file in os.listdir(self.dirpath):
+            declared_f.append(ModuleGraphGenerator.get_func_list(file))
+
+
+        graph = self.get_representation(declared_f)
+        #self.print_representation(graph)
+
+        return graph
+
+
+
+
+    # Generating blank graph representation
+    def get_representation(self, declared_f):
+
+        # Sanitizing and concatenating declared_f
+        i = 0
+        while i < len(declared_f):
+            # Checking for files with no function calls
+            if len(declared_f[i]) == 1:
+                declared_f.pop(i)
+                # Correcting indexes tracking
+                i -= 1
+            i += 1
+
+        i = 0
+        while i < len(declared_f):
+            declared_f[i].pop(0)
+            i += 1
+
+        declared_list = [item for sublist in declared_f for item in sublist]
+        declared_list = list(dict.fromkeys(declared_list))
+        graph = [["" for x in range(len(declared_list))] for y in range(len(declared_list))]
+
+        i = 1
+        while i < len(declared_list):
+            graph[0][i] = declared_list[i]
+            i = i + 1
+
+        i = 1
+        while i < len(declared_list):
+            graph[i][0] = declared_list[i]
+            i = i + 1
+
+        # Calculating edge values
+        i = 1
+        while i < len(graph):
+            j = 1
+            while j < len(graph[i]):
+                # TODO For now random vals
+                graph[i][j] = self.set_calls(graph[i][0], graph[j][0], declared_f)
+                j = j + 1
+            i = i + 1
+
+        return graph
+
+    @staticmethod
+    def set_calls(object_function, target_function, declared_f):
+        #TODO
+        import random
+        return random.randint(0,3)
         pass
+
+    # Prints graph representation
+    def print_representation(self, graph):
+        i = 0
+        while i < len(graph):
+            print(graph[i])
+            i += 1
+
+
+
+
 
 
 # Module relationship graph (3)
@@ -135,7 +224,7 @@ class ModuleGraphGenerator(IGraphGenerator):
         self.dirpath = dirpath
 
     def get_files(self):
-        files=[]
+        files = []
         for file in os.listdir(self.dirpath):
             if self.filter_non_py(file) == 1:
                 files.append(file[:])
@@ -233,16 +322,15 @@ class ModuleGraphGenerator(IGraphGenerator):
         node = ast.NodeVisitor
         for node in ast.walk(p):
             if isinstance(node, ast.FunctionDef):
-                if(node.name == "__init__"):
+                if (node.name == "__init__"):
                     pass
                 else:
-                    if(node.name in func_array):
+                    if (node.name in func_array):
                         pass
                     else:
                         func_array.append(node.name)
 
         return func_array
-
 
     # Getting func/methods names CALLED
     @staticmethod
@@ -278,7 +366,6 @@ class ModuleGraphGenerator(IGraphGenerator):
             if '.' in call_desired[i]:
                 call_desired[i] = call_desired[i].split(".")[1]
             i = i + 1
-
 
         declared_desired = []
         i = 0
@@ -326,3 +413,6 @@ class FuncCallVisitor(ast.NodeVisitor):
         except AttributeError:
             self.generic_visit(node)
 
+
+#eta = MethodGraphGenerator("./")
+#eta.get_graph()

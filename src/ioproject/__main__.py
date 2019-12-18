@@ -11,6 +11,8 @@ if len(sys.argv) > 1:
 # Creating drawer class which contains methods used below in the dynamic menu
 graphSketcher = DrawGraph(directory)
 
+graphSketcher.draw_method_graph()
+'''
 # menu
 exit_condition = '0'
 choice = '0'
@@ -97,3 +99,4 @@ while exit_condition == '0':
         exit(0)
     else:
         input("\nWrong input.\nPress enter to continue...")
+'''
