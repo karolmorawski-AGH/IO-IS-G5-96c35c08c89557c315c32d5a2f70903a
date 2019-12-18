@@ -44,12 +44,39 @@ class DrawGraph:
                 func.append(graph[i][0])
             i += 1
 
+        # Set node values for func list
+        nvalues = []
+        i = 1
+        j = 1
+        while i < len(graph):
+            summ = 0
+            j = 1
+            while j < len(graph[i]):
+                summ += graph[i][j]
+                j += 1
+            func[i-1] += '\n' + str(summ)
+            i += 1
+
+
+        # Set edge values for func list
+
+        method_graph.print_representation(graph)
 
         G = nx.DiGraph()
         for i in range(0, len(func)):
             G.add_node(func[i])
+
+
+        for i in range(0, len(func)):
+            summ = 0
+            for j in range(0, len(graph[i+1])-1):
+                if graph[i+1][j+1] != 0:
+                    G.add_edge(func[i], func[j], length=graph[i+1][j+1])
+
+
+
         pos = nx.spring_layout(G)
-        nx.draw(G, pos, edge_color='black', width=1, node_size=1000, node_color='lightblue', with_labels=True)
+        nx.draw(G, pos, edge_color='black', width=1, node_size=750, node_color='lightblue', with_labels=True)
         edge_labels = dict([((u, v,), d['length']) for u, v, d in G.edges(data=True)])
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, label_pos=0.2)
         plt.show()
@@ -190,5 +217,3 @@ class DrawGraph:
                 font_size=10)
         plt.show()
 
-
-print('elo')
