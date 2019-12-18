@@ -414,5 +414,3 @@ class FuncCallVisitor(ast.NodeVisitor):
             self.generic_visit(node)
 
 
-#eta = MethodGraphGenerator("./")
-#eta.get_graph()
