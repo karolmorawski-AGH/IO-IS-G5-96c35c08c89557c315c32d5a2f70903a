@@ -145,7 +145,9 @@ class MethodGraphGenerator(IGraphGenerator):
 
 
         graph = self.get_representation(declared_f)
-        self.print_representation(graph)
+        #self.print_representation(graph)
+
+        return graph
 
 
 
@@ -187,11 +189,19 @@ class MethodGraphGenerator(IGraphGenerator):
         while i < len(graph):
             j = 1
             while j < len(graph[i]):
-                # TODO
+                # TODO For now random vals
+                graph[i][j] = self.set_calls(graph[i][0], graph[j][0], declared_f)
                 j = j + 1
             i = i + 1
 
         return graph
+
+    @staticmethod
+    def set_calls(object_function, target_function, declared_f):
+        #TODO
+        import random
+        return random.randint(0,3)
+        pass
 
     # Prints graph representation
     def print_representation(self, graph):
@@ -199,6 +209,8 @@ class MethodGraphGenerator(IGraphGenerator):
         while i < len(graph):
             print(graph[i])
             i += 1
+
+
 
 
 
@@ -402,5 +414,5 @@ class FuncCallVisitor(ast.NodeVisitor):
             self.generic_visit(node)
 
 
-eta = MethodGraphGenerator("./")
-eta.get_graph()
+#eta = MethodGraphGenerator("./")
+#eta.get_graph()
