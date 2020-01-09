@@ -37,29 +37,32 @@ class FileGraphGenerator(IGraphGenerator):
         dependency_array = []
         # Getting all available local user-defined .py files
         for file in os.listdir(self.dirpath):
-            if self.filter_non_py(file) == 1:
+            if self.filter_non_py(file) == 1 and os.path.isdir(file) is not True:
                 files.append(file[:-3])
+                print(file)
         # This loop is self-explanatory
         for file in os.listdir(self.dirpath):
-            if self.filter_non_py(file) == 1:
-                for imp in self.get_imports(self.dirpath + "/" + file):
-                    if str(imp[0]) == "[]":
-                        module = str(imp[1])
-                        module = module[2:-2]
-                        if module in files:
-                            dependency_array.append(
-                                [file + "\n(" + str(os.stat(self.dirpath + "/" + file).st_size) + ")",
-                                 module + ".py\n(" + str(
-                                     os.stat(self.dirpath + "/" + module + ".py").st_size) + ")",
-                                 self.count_func(self.dirpath + module + ".py")])
-                    else:
-                        module = str(imp[0])
-                        module = module[2:-2]
-                        if module in files:
-                            dependency_array.append(
-                                [file + "\n(" + str(os.stat(self.dirpath + "/" + file).st_size) + ")",
-                                 module + ".py\n(" + str(
-                                     os.stat(self.dirpath + "/" + module + ".py").st_size) + ")", 1])
+            # Filtering out directories
+            if os.path.isdir(file) is not True:
+                if self.filter_non_py(file) == 1:
+                    for imp in self.get_imports(self.dirpath + "/" + file):
+                        if str(imp[0]) == "[]":
+                            module = str(imp[1])
+                            module = module[2:-2]
+                            if module in files:
+                                dependency_array.append(
+                                    [file + "\n(" + str(os.stat(self.dirpath + "/" + file).st_size) + ")",
+                                     module + ".py\n(" + str(
+                                         os.stat(self.dirpath + "/" + module + ".py").st_size) + ")",
+                                     self.count_func(self.dirpath + module + ".py")])
+                        else:
+                            module = str(imp[0])
+                            module = module[2:-2]
+                            if module in files:
+                                dependency_array.append(
+                                    [file + "\n(" + str(os.stat(self.dirpath + "/" + file).st_size) + ")",
+                                     module + ".py\n(" + str(
+                                         os.stat(self.dirpath + "/" + module + ".py").st_size) + ")", 1])
 
         return dependency_array
 
@@ -124,7 +127,7 @@ class MethodGraphGenerator(IGraphGenerator):
 
         # Saving all available local user-defined .py files to files[]
         for file in os.listdir(self.dirpath):
-            if ModuleGraphGenerator.filter_non_py(file) == 1 and file:
+            if ModuleGraphGenerator.filter_non_py(file) == 1 and file and os.path.isdir(file) is not True:
                 files.append(file[:-3])
 
         # Dokumentacja w komentarzu
@@ -141,8 +144,8 @@ class MethodGraphGenerator(IGraphGenerator):
 
         # Getting all declared functions
         for file in os.listdir(self.dirpath):
-            declared_f.append(ModuleGraphGenerator.get_func_list(file))
-
+            if  os.path.isdir(file) is not True:
+                declared_f.append(ModuleGraphGenerator.get_func_list(file))
 
         graph = self.get_representation(declared_f)
         #self.print_representation(graph)
@@ -211,10 +214,6 @@ class MethodGraphGenerator(IGraphGenerator):
             i += 1
 
 
-
-
-
-
 # Module relationship graph (3)
 class ModuleGraphGenerator(IGraphGenerator):
     dirpath = ""
@@ -237,12 +236,14 @@ class ModuleGraphGenerator(IGraphGenerator):
         called_f = []
         # Getting all available local user-defined .py files
         for file in os.listdir(self.dirpath):
-            if self.filter_non_py(file) == 1:
-                files.append(file[:-3])
+            if os.path.isdir(file) is not True:
+                if self.filter_non_py(file) == 1:
+                    files.append(file[:-3])
 
         for file in os.listdir(self.dirpath):
-            declared_f.append(self.get_func_list(file))
-            called_f.append(self.list_func_calls(file))
+            if os.path.isdir(file) is not True:
+                declared_f.append(self.get_func_list(file))
+                called_f.append(self.list_func_calls(file))
 
         w = len(called_f) + 1
         h = len(declared_f) + 1
@@ -310,7 +311,7 @@ class ModuleGraphGenerator(IGraphGenerator):
     @staticmethod
     def get_func_list(filepath):
 
-        # array of func/methods for given sfile
+        # array of func/methods for given file
         func_array = []
         filename = filepath
         filepath = filepath.split("/")[-1]
@@ -318,6 +319,7 @@ class ModuleGraphGenerator(IGraphGenerator):
 
         with open(filename) as file:
             p = ast.parse(file.read())
+
 
         node = ast.NodeVisitor
         for node in ast.walk(p):
