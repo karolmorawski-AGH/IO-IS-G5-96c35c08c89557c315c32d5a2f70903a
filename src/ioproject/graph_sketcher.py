@@ -1,11 +1,19 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import src.ioproject.graph_generator as gg
+import graph_generator as gg
+import git
 
 
 # This module contains DrawGraph class with methods corresponding to drawing specific type of graph
 # Uses graph_generator module methods for getting graph representations and then interprets them
 # accordingly
+def getVer():
+    try:
+        repo = git.Repo('../../')
+        sha = repo.head.object.hexsha
+    except:
+        sha = 'unknown'
+    return sha
 
 class DrawGraph:
     # Default dirpath and gg class
@@ -24,6 +32,7 @@ class DrawGraph:
         for i in range(0, len(x)):
             G.add_edge(x[i][0], x[i][1], length=x[i][2])
 
+        plt.title("Version: " + getVer())
         pos = nx.spring_layout(G)
         nx.draw(G, pos, edge_color='black', width=1, node_size=1000, node_color='lightgreen', with_labels=True)
         edge_labels = dict([((u, v,), d['length']) for u, v, d in G.edges(data=True)])
@@ -73,8 +82,7 @@ class DrawGraph:
                 if graph[i+1][j+1] != 0:
                     G.add_edge(func[i], func[j], length=graph[i+1][j+1])
 
-
-
+        plt.title("Version: " + getVer())
         pos = nx.spring_layout(G)
         nx.draw(G, pos, edge_color='black', width=1, node_size=750, node_color='lightblue', with_labels=True)
         edge_labels = dict([((u, v,), d['length']) for u, v, d in G.edges(data=True)])
@@ -114,6 +122,7 @@ class DrawGraph:
             else:
                 color_map.append('lightgreen')
 
+        plt.title("Version: " + getVer())
         pos = nx.spring_layout(graphx)
         nx.draw(graphx, pos, edge_color='black', width=0.5, node_size=1000, node_color=color_map, with_labels=True,
                 font_size=10)
@@ -182,6 +191,7 @@ class DrawGraph:
             else:
                 color_map.append('#fff989')
 
+        plt.title("Version: " + getVer())
         pos = nx.spring_layout(graphx)
         nx.draw(graphx, pos, edge_color='black', width=0.5, node_size=1000, node_color=color_map, with_labels=True,
                 font_size=10)
@@ -211,7 +221,8 @@ class DrawGraph:
                 color_map.append('lightblue')
             else:
                 color_map.append('#fff989')
-
+                1
+        plt.title("Version: " + getVer())
         pos = nx.planar_layout(graphx)
         nx.draw(graphx, pos, edge_color='black', width=0.5, node_size=1000, node_color=color_map, with_labels=True,
                 font_size=10)
