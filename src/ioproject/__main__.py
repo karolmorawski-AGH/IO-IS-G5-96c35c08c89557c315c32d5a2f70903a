@@ -1,4 +1,11 @@
 import sys
+import git
+
+def getVer():
+    repo = git.Repo(search_parent_directories=True)
+    sha = repo.head.object.hexsha
+    return sha
+
 
 print('__file__={0:<35} | __name__={1:<20} | __package__={2:<20}'.format(__file__, __name__, str(__package__)))
 
@@ -7,6 +14,8 @@ from src.ioproject.graph_sketcher import DrawGraph
 directory = "./"
 if len(sys.argv) > 1:
     directory = sys.argv[1]
+
+# print("Version: "+getVer())
 
 # Creating drawer class which contains methods used below in the dynamic menu
 graphSketcher = DrawGraph(directory)
