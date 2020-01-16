@@ -1,6 +1,7 @@
 import os
 import ast
 import abc
+import sys
 from collections import namedtuple
 from collections import deque
 
@@ -144,19 +145,17 @@ class MethodGraphGenerator(IGraphGenerator):
 
         # Getting all declared functions
         for file in os.listdir(self.dirpath):
-            if  os.path.isdir(file) is not True:
+            if os.path.isdir(file) is not True:
                 declared_f.append(ModuleGraphGenerator.get_func_list(file))
 
-        graph = self.get_representation(declared_f)
-        #self.print_representation(graph)
 
+        graph = self.get_representation(declared_f, files)
+        self.print_representation(graph)
         return graph
 
 
-
-
     # Generating blank graph representation
-    def get_representation(self, declared_f):
+    def get_representation(self, declared_f, file_list):
 
         # Sanitizing and concatenating declared_f
         i = 0
@@ -192,21 +191,76 @@ class MethodGraphGenerator(IGraphGenerator):
         while i < len(graph):
             j = 1
             while j < len(graph[i]):
-                # TODO For now random vals
-                graph[i][j] = self.set_calls(graph[i][0], graph[j][0], declared_f)
+                graph[i][j] = self.set_calls(graph[i][0], graph[j][0], declared_f, file_list)
                 j = j + 1
             i = i + 1
-
         return graph
 
     @staticmethod
-    def set_calls(object_function, target_function, declared_f):
-        #TODO
-        import random
-        return random.randint(0,3)
-        pass
+    def set_calls(object_function, target_function, declared_f, file_list):
 
-    # Prints graph representation
+        if '__init__' in file_list:
+            file_list.remove('__init__')
+        # Associating object function with it's file in which it is declared
+        # Bardzo optymistyczne zalozenie ze file_list oraz declared_f jest po kolei
+        file = ''
+        try:
+            i = 0
+            while i < len(declared_f):
+                if object_function in declared_f[i]:
+                    file = file_list[i]
+                i += 1
+            if file == '':
+                raise FileNotFoundError('Object function is not present in declared functions list')
+        except FileNotFoundError as e:
+            print(e)
+            return 0
+
+        # Iterator of func calls
+        num_of_calls = 0
+        file = file + '.py'
+        loc_range = [0, -1]
+
+        with open(file) as source_code:
+            p = ast.parse(source_code.read())
+
+        node = ast.NodeVisitor
+        # Walking through nodes searching for method definition and getting its LOC range (line of declaration in body)
+
+        for node in ast.walk(p):
+            if isinstance(node, ast.FunctionDef):
+                if node.name == object_function:
+                    loc_range[0] = node.lineno
+                    loc_range[1] = node.body[-1].lineno
+                    break
+
+        #print(object_function + ' in file: ' + file + " START: " + str(loc_range[0]) + ' END: ' + str(loc_range[1]))
+
+        num_of_calls = MethodGraphGenerator.find_calls(file, target_function, loc_range[0], loc_range[1])
+
+        return num_of_calls
+
+    # Finds number of calls of a function/method in given fragment of source code
+    @staticmethod
+    def find_calls(file, target_function, start, end):
+
+        with open(file) as f:
+            for line in f.readlines()[start:end]:
+                MethodGraphGenerator.is_call(line)
+
+    # Checks if string is a method/function call and returns number of calls in that line
+    @staticmethod
+    def is_call(line):
+        try:
+            node = ast.parse(line)
+            print(node)
+        except SyntaxError:
+            return False
+
+
+        return 5
+
+    # Prints graph
     def print_representation(self, graph):
         i = 0
         while i < len(graph):
@@ -320,7 +374,6 @@ class ModuleGraphGenerator(IGraphGenerator):
         with open(filename) as file:
             p = ast.parse(file.read())
 
-
         node = ast.NodeVisitor
         for node in ast.walk(p):
             if isinstance(node, ast.FunctionDef):
@@ -414,5 +467,8 @@ class FuncCallVisitor(ast.NodeVisitor):
             self._name.appendleft(node.value.id)
         except AttributeError:
             self.generic_visit(node)
+
+a = MethodGraphGenerator('./')
+a.get_graph()
 
 
