@@ -243,22 +243,24 @@ class MethodGraphGenerator(IGraphGenerator):
     # Finds number of calls of a function/method in given fragment of source code
     @staticmethod
     def find_calls(file, target_function, start, end):
-
+        num_of_calls = 0
         with open(file) as f:
             for line in f.readlines()[start:end]:
-                MethodGraphGenerator.is_call(line)
+                if MethodGraphGenerator.is_call(line, target_function):
+                    num_of_calls+= line.count(target_function + '(')
+
+        return num_of_calls
 
     # Checks if string is a method/function call and returns number of calls in that line
     @staticmethod
-    def is_call(line):
-        try:
-            node = ast.parse(line)
-            print(node)
-        except SyntaxError:
-            return False
+    def is_call(line, target_function):
+        # Some quality code below
+        num_of_calls = 0
+        if target_function + "(" in line and 'def ' not in line:
+            return True
 
 
-        return 5
+        return False
 
     # Prints graph
     def print_representation(self, graph):
@@ -470,5 +472,3 @@ class FuncCallVisitor(ast.NodeVisitor):
 
 a = MethodGraphGenerator('./')
 a.get_graph()
-
-
