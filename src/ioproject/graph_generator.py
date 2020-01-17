@@ -40,7 +40,6 @@ class FileGraphGenerator(IGraphGenerator):
         for file in os.listdir(self.dirpath):
             if self.filter_non_py(file) == 1 and os.path.isdir(file) is not True:
                 files.append(file[:-3])
-                print(file)
         # This loop is self-explanatory
         for file in os.listdir(self.dirpath):
             # Filtering out directories
@@ -148,9 +147,7 @@ class MethodGraphGenerator(IGraphGenerator):
             if os.path.isdir(file) is not True:
                 declared_f.append(ModuleGraphGenerator.get_func_list(file))
 
-
         graph = self.get_representation(declared_f, files)
-        self.print_representation(graph)
         return graph
 
 
@@ -225,16 +222,30 @@ class MethodGraphGenerator(IGraphGenerator):
             p = ast.parse(source_code.read())
 
         node = ast.NodeVisitor
-        # Walking through nodes searching for method definition and getting its LOC range (line of declaration in body)
+        # Walking through nodes searching for method definition and getting its first line
 
         for node in ast.walk(p):
             if isinstance(node, ast.FunctionDef):
                 if node.name == object_function:
                     loc_range[0] = node.lineno
-                    loc_range[1] = node.body[-1].lineno
                     break
 
-        #print(object_function + ' in file: ' + file + " START: " + str(loc_range[0]) + ' END: ' + str(loc_range[1]))
+        # Iterating through file lines and checking indents to determine method definition last line
+        line_iterator = 1
+        indent_offset = 0
+        with open(file) as source_code:
+            for line in source_code:
+                if line == '':
+                    continue
+                if line_iterator == loc_range[0]:
+                    # Getting indent
+                    indent_offset = len(line) - len(line.lstrip())
+                    # No all edge cases considered - if method is nested inside one class it may jump to first indented
+                    # line in second class and EOF may be actually as def of method or variable (but that's fine)
+                if (len(line) - len(line.lstrip())) == indent_offset and line_iterator > loc_range[0]:
+                    loc_range[1] = line_iterator
+                    break
+                line_iterator += 1
 
         num_of_calls = MethodGraphGenerator.find_calls(file, target_function, loc_range[0], loc_range[1])
 
@@ -246,19 +257,19 @@ class MethodGraphGenerator(IGraphGenerator):
         num_of_calls = 0
         with open(file) as f:
             for line in f.readlines()[start:end]:
+                # Sanitizing line to remove strings nad eliminate false-positives
+                line_t = line.join(line.rsplit('"', 1))[1:]
                 if MethodGraphGenerator.is_call(line, target_function):
-                    num_of_calls+= line.count(target_function + '(')
+                    num_of_calls += line.count(target_function + '(')
 
         return num_of_calls
 
     # Checks if string is a method/function call and returns number of calls in that line
     @staticmethod
     def is_call(line, target_function):
-        # Some quality code below
-        num_of_calls = 0
+        # Some quality code here
         if target_function + "(" in line and 'def ' not in line:
             return True
-
 
         return False
 
@@ -329,7 +340,6 @@ class ModuleGraphGenerator(IGraphGenerator):
                     Matrix[i][j] = "0"
                 else:
                     # calling, declared
-                    # print(i,j, Matrix[i][0], Matrix[j][0])
                     Matrix[i][j] = self.get_number_of_calls(Matrix[i][0], Matrix[j][0], called_f, declared_f)
                 j = j + 1
             i = i + 1
@@ -408,7 +418,6 @@ class ModuleGraphGenerator(IGraphGenerator):
     def get_number_of_calls(calling, declared, called_f, declared_f):
 
         # find calling array
-        # print(called_f)
         call_desired = []
         i = 0
         while i < len(called_f):
