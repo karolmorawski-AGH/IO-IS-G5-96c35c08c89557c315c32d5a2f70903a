@@ -69,7 +69,7 @@ class DrawGraph:
 
         # Set edge values for func list
 
-        method_graph.print_representation(graph)
+        #method_graph.print_representation(graph)
 
         G = nx.DiGraph()
         for i in range(0, len(func)):
