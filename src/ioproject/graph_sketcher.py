@@ -27,6 +27,7 @@ class DrawGraph:
     def draw_file_graph(self):
         file_graph_gen = gg.FileGraphGenerator(self.dirpath)
         x = file_graph_gen.get_graph()
+        plt.figure(figsize=(12, 12))
 
         G = nx.DiGraph()
         for i in range(0, len(x)):
@@ -70,7 +71,7 @@ class DrawGraph:
         # Set edge values for func list
 
         #method_graph.print_representation(graph)
-
+        plt.figure(figsize=(12, 12))
         G = nx.DiGraph()
         for i in range(0, len(func)):
             G.add_node(func[i])
@@ -83,13 +84,15 @@ class DrawGraph:
                     G.add_edge(func[i], func[j], length=graph[i+1][j+1])
 
         plt.title("Version: " + getVer())
-        pos = nx.spring_layout(G)
+        pos = nx.circular_layout(G)
         nx.draw(G, pos, edge_color='black', width=1, node_size=750, node_color='lightblue', with_labels=True)
         edge_labels = dict([((u, v,), d['length']) for u, v, d in G.edges(data=True)])
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, label_pos=0.2)
+        print('Graph saved into /graphs directory')
+        #plt.savefig('../../graphs/method_r_' + getVer(), dpi=500)
         plt.show()
 
-    # Draws file relationship graph
+    # Draws module relationship graph
     def draw_module_graph(self):
 
         module_graph_gen = gg.ModuleGraphGenerator(self.dirpath)
@@ -97,6 +100,7 @@ class DrawGraph:
         array = module_graph_gen.get_graph()[0]
         array2 = module_graph_gen.get_graph()[1]
 
+        plt.figure(figsize=(12, 12))
         graphx = nx.DiGraph()
         sum = [0] * len(array)
 
@@ -131,14 +135,18 @@ class DrawGraph:
         plt.show()
 
     # File + Module graph
+    # TODO
     def draw_file_module_graph(self):
         module_graph_gen = gg.ModuleGraphGenerator(self.dirpath)
         file_graph_gen = gg.FileGraphGenerator(self.dirpath)
 
         x = file_graph_gen.get_graph()
+        print(x)
+        print(len(x))
         array = module_graph_gen.get_graph()[0]
         array2 = module_graph_gen.get_graph()[1]
 
+        plt.figure(figsize=(12, 12))
         graphx = nx.MultiDiGraph()
 
         # FOR module graph
@@ -151,9 +159,10 @@ class DrawGraph:
         # MODULES
 
         # array of files
+        # FIXME
         file_array = []
-        for i in range(0, len(x)):
-            for j in range(0, len(x)):
+        for i in range(0, len(x)-1):
+            for j in range(0, len(x)-1):
                 if x[i][j] not in file_array:
                     file_array.append(x[i][j])
 
@@ -206,6 +215,8 @@ class DrawGraph:
 
         array = module_graph_gen.get_graph()[0]
         array2 = module_graph_gen.get_graph()[1]
+
+        plt.figure(figsize=(12, 12))
         graphx = nx.DiGraph()
         for i in range(1, len(array)):
             graphx.add_node(array[i][0])

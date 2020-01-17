@@ -83,9 +83,11 @@ def main():
             print("\nGraph generated")
             input("Press enter to continue...")
         elif choice == "5":
+            graphSketcher.draw_file_module_graph()
             print("\nGraph generated")
             input("Press enter to continue...")
         elif choice == "6":
+            graphSketcher.draw_file_method_graph_direct()
             print("\nGraph generated")
             input("Press enter to continue...")
         elif choice == "7":
