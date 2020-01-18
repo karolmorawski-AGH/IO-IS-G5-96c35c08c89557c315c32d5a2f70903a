@@ -2,7 +2,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import graph_generator as gg
 import git
-
+from radon.complexity import cc_visit
+from radon.cli.tools import iter_filenames
 
 # This module contains DrawGraph class with methods corresponding to drawing specific type of graph
 # Uses graph_generator module methods for getting graph representations and then interprets them
@@ -53,6 +54,27 @@ class DrawGraph:
             if i != 0:
                 func.append(graph[i][0])
             i += 1
+
+
+
+        # Cyclomatic Complexity
+        fileCode = []
+        for filename in iter_filenames(['.']):
+            with open(filename) as fobj:
+                fileCode.append(fobj.read())
+
+        complex = []
+        for code in fileCode:
+            complex.append(cc_visit(code))
+
+        for data in complex:
+            for part in data:
+                if len(part) == 8:
+                    for n in range(len(func)):
+                        if str(part[0]) == func[n]:
+                            func[n] += '\nCC: ' + str(part[7])
+
+
 
         # Set node values for func list
         nvalues = []
