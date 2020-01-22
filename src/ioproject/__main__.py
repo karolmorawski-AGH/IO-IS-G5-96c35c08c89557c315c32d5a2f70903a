@@ -68,18 +68,19 @@ def main():
         choice = input("\n:")
 
         if choice == "1":
-            print("\nGraph generated")
             graphSketcher.draw_file_graph()
+            print("\nGraph generated")
             input("Press enter to continue...")
         elif choice == "2":
-            print("\nGraph generated")
             graphSketcher.draw_method_graph()
+            print("\nGraph generated")
             input("Press enter to continue...")
         elif choice == "3":
-            print("\nGraph generated")
             graphSketcher.draw_module_graph()
+            print("\nGraph generated")
             input("Press enter to continue...")
         elif choice == "4":
+            graphSketcher.draw_file_method_graph()
             print("\nGraph generated")
             input("Press enter to continue...")
         elif choice == "5":
@@ -87,15 +88,16 @@ def main():
             print("\nGraph generated")
             input("Press enter to continue...")
         elif choice == "6":
-            graphSketcher.draw_file_method_graph_direct()
+            graphSketcher.draw_method_module_graph()
             print("\nGraph generated")
             input("Press enter to continue...")
         elif choice == "7":
+            graphSketcher.draw_file_method_module_graph()
             print("\nGraph generated")
             input("Press enter to continue...")
         elif choice == "8":
-            print("\nGraph generated")
             graphSketcher.draw_file_method_graph_direct()
+            print("\nGraph generated")
             input("Press enter to continue...")
         elif choice == "q":
             exit(0)

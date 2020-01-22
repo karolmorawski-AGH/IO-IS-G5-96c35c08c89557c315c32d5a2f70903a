@@ -36,7 +36,7 @@ class DrawGraph:
 
         plt.title("Version: " + getVer())
         pos = nx.spring_layout(G)
-        nx.draw(G, pos, edge_color='black', width=1, node_size=1000, node_color='lightgreen', with_labels=True)
+        nx.draw(G, pos, edge_color='black', width=1, node_size=1000, node_color='#fff989', with_labels=True)
         edge_labels = dict([((u, v,), d['length']) for u, v, d in G.edges(data=True)])
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, label_pos=0.2)
         plt.show()
@@ -55,8 +55,6 @@ class DrawGraph:
                 func.append(graph[i][0])
             i += 1
 
-
-
         # Cyclomatic Complexity
         fileCode = []
         for filename in iter_filenames(['.']):
@@ -74,8 +72,6 @@ class DrawGraph:
                         if str(part[0]) == func[n]:
                             func[n] += '\nCC: ' + str(part[7])
 
-
-
         # Set node values for func list
         nvalues = []
         i = 1
@@ -89,15 +85,12 @@ class DrawGraph:
             func[i-1] += '\n' + str(summ)
             i += 1
 
-
         # Set edge values for func list
-
         #method_graph.print_representation(graph)
         plt.figure(figsize=(12, 12))
         G = nx.DiGraph()
         for i in range(0, len(func)):
             G.add_node(func[i])
-
 
         for i in range(0, len(func)):
             summ = 0
@@ -156,15 +149,99 @@ class DrawGraph:
         nx.draw_networkx_edge_labels(graphx, pos, edge_labels=edge_labels, label_pos=0.4)
         plt.show()
 
-    # File + Module graph
-    # TODO
+
+    #File + Method graph
+    #TODO
+    def draw_file_method_graph(self):
+        method_graph = gg.MethodGraphGenerator("./")
+        graph = method_graph.get_graph()
+        file_graph_gen = gg.FileGraphGenerator(self.dirpath)
+        x = file_graph_gen.get_graph()
+
+        module_graph_gen = gg.ModuleGraphGenerator(self.dirpath)
+
+        array = module_graph_gen.get_graph()[0]
+        array2 = module_graph_gen.get_graph()[1]
+
+        # Get func list
+        func = []
+        i = 0
+        while i < len(graph):
+            if i != 0:
+                func.append(graph[i][0])
+            i += 1
+
+        # Set node values for func list
+        nvalues = []
+        i = 1
+        j = 1
+        while i < len(graph):
+            summ = 0
+            j = 1
+            while j < len(graph[i]):
+                summ += graph[i][j]
+                j += 1
+            func[i - 1] += '\n' + str(summ)
+            i += 1
+
+        # Set edge values for func list
+        # method_graph.print_representation(graph)
+        plt.figure(figsize=(12, 12))
+        G = nx.DiGraph()
+
+        # files-files
+        xsize=[]
+        for i in range(0,len(x)):
+            xsize.append(x[i][1].split)
+        print(xsize)
+        for i in range(0, len(x)):
+            G.add_edge(x[i][0], x[i][1], length=x[i][2])
+
+        # lonely functions
+        for i in range(0, len(func)):
+            G.add_node(func[i])
+
+        # func-func
+        for i in range(0, len(func)):
+            summ = 0
+            for j in range(0, len(graph[i + 1]) - 1):
+                if graph[i + 1][j + 1] != 0:
+                    G.add_edge(func[i], func[j], length=graph[i + 1][j + 1])
+
+        # func-file
+        for i in range(1, len(x)):
+            if len(array2[i - 1]) > 0:
+                for j in range(0, len(array2[i - 1])):
+                    G.add_edge(array2[i - 1][j], array[i][0], length="")
+
+
+        print(array)
+        print(array2)
+        print(x)
+
+        color_map = []
+        for node in G:
+            if ".py" not in node:
+                color_map.append('lightblue')
+            else:
+                color_map.append('#fff989')
+
+        plt.title("Version: " + getVer())
+        pos = nx.circular_layout(G)
+        nx.draw(G, pos, edge_color='black', width=1, node_size=750, node_color=color_map, with_labels=True)
+        edge_labels = dict([((u, v,), d['length']) for u, v, d in G.edges(data=True)])
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, label_pos=0.2)
+        print('Graph saved into /graphs directory')
+        # plt.savefig('../../graphs/method_r_' + getVer(), dpi=500)
+        plt.show()
+
+    #File + Module graph
     def draw_file_module_graph(self):
         module_graph_gen = gg.ModuleGraphGenerator(self.dirpath)
         file_graph_gen = gg.FileGraphGenerator(self.dirpath)
 
         x = file_graph_gen.get_graph()
-        print(x)
-        print(len(x))
+
         array = module_graph_gen.get_graph()[0]
         array2 = module_graph_gen.get_graph()[1]
 
@@ -181,17 +258,20 @@ class DrawGraph:
         # MODULES
 
         # array of files
-        # FIXME
         file_array = []
-        for i in range(0, len(x)-1):
-            for j in range(0, len(x)-1):
+        for i in range(0, len(x)):
+            for j in range(0, 2):
                 if x[i][j] not in file_array:
-                    file_array.append(x[i][j])
+                     file_array.append(x[i][j])
+
 
         # array of modules
         module_array = []
         for i in range(0, len(array[0])):
             module_array.append(array[0][i])
+
+        print(module_array)
+        print(file_array)
 
         file_sum = 0
         for i in range(1, len(array)):
@@ -202,8 +282,15 @@ class DrawGraph:
                     graphx.add_edge(array[i][0] + "\n" + str(sum[i]), array[0][j] + "\n" + str(sum[j]),
                                     length=array[i][j])
 
-                    graphx.add_edge(file_array[j], array[i][0] + "\n" + str(sum[i]), length="")
+        for i in range(1, len(module_array)):
+            for j in range(0, len(file_array)):
+                if module_array[i] in file_array[j]:
+                    graphx.add_edge(file_array[j], module_array[i] + "\n" + str(sum[i]), length="")
 
+        x = file_graph_gen.get_graph()
+
+        for i in range(0, len(x)):
+            graphx.add_edge(x[i][0], x[i][1], length=x[i][2])
         # METHODS
         for i in range(1, len(array)):
             if len(array2[i - 1]) > 0:
@@ -230,9 +317,18 @@ class DrawGraph:
         nx.draw_networkx_edge_labels(graphx, pos, edge_labels=edge_labels, label_pos=0.4)
         plt.show()
 
+    #Story 1+2+3
+    #TODO
+    def draw_file_method_module_graph(self):
+        pass
+
+    # Story 2+3
+    #TODO
+    def draw_method_module_graph(self):
+        pass
+
     # Story 6
     def draw_file_method_graph_direct(self):
-
         module_graph_gen = gg.ModuleGraphGenerator(self.dirpath)
 
         array = module_graph_gen.get_graph()[0]
@@ -254,7 +350,7 @@ class DrawGraph:
                 color_map.append('lightblue')
             else:
                 color_map.append('#fff989')
-                1
+
         plt.title("Version: " + getVer())
         pos = nx.planar_layout(graphx)
         nx.draw(graphx, pos, edge_color='black', width=0.5, node_size=1000, node_color=color_map, with_labels=True,

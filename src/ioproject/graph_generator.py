@@ -389,13 +389,10 @@ class ModuleGraphGenerator(IGraphGenerator):
         node = ast.NodeVisitor
         for node in ast.walk(p):
             if isinstance(node, ast.FunctionDef):
-                if (node.name == "__init__"):
+                if (node.name in func_array):
                     pass
                 else:
-                    if (node.name in func_array):
-                        pass
-                    else:
-                        func_array.append(node.name)
+                    func_array.append(node.name)
 
         return func_array
 
