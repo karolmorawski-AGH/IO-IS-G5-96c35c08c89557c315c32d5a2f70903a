@@ -1,8 +1,8 @@
 import unittest
 import sys
+import os
 sys.path.append('../')
 from src.ioproject import FileGraphGenerator
-import src.ioproject.graph_generator as gg
 class TestFileGraphGenerator(unittest.TestCase):
     dirpath = "./"
 
@@ -16,25 +16,25 @@ class TestFileGraphGenerator(unittest.TestCase):
         self.assertEqual(self.filegg.dirpath, self.dirpath)
 
     def test_get_graph(self):
-        self.assertTrue(gg.files)
-        self.assertTrue(gg.dependency_array)
-        pass
+
+        self.assertTrue(self.filegg.get_graph())
 
     def test_filter_non_py(self):
         s = "AAA/BBB/CCC/d.py"
         d = "AAA/BBB/CCC/d.x"
         f = "123qwe"
-        self.assertTrue(gg.filter_non_py(s))
-        self.assertFalse(gg.filter_non_py(d))
-        self.assertFalse(gg.filter_non_py(f))
-        pass
+        self.assertTrue(self.filegg.filter_non_py(s))
+        self.assertFalse(self.filegg.filter_non_py(d))
+        self.assertFalse(self.filegg.filter_non_py(f))
     def test_get_imports(self):
-        pass
+        x=self.filegg.importHelper
+        file=[]
+        file=os.listdir(self.dirpath)
+        y=self.filegg.get_imports(self.dirpath + "/" + file[0])
+        self.assertFalse(x==y)
 
     def test_count_func(self):
-        self.assertFalse(gg.sum<0)
-        self.assertTrue(gg.node)
-        pass
+        self.assertFalse(self.dirpath.count_func("test_DrawGraph.py")<0)
 
 if __name__ == '__main__':
     unittest.main()
