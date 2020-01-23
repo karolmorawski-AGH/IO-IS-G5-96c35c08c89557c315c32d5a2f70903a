@@ -1,7 +1,7 @@
 import unittest
 import sys
 sys.path.append('../')
-from src.ioproject import ModuleGraphGenerator
+from src.ioproject.graph_generator import ModuleGraphGenerator
 
 class TestModuleGraphGenerator(unittest.TestCase):
     dirpath = "./"
@@ -18,21 +18,32 @@ class TestModuleGraphGenerator(unittest.TestCase):
     def test_get_files(self):
         file=[]
         self.assertFalse(self.modulegg.get_files()==file)
-        pass
 
     def test_get_graph(self):
         self.assertTrue(self.modulegg.get_graph())
-        pass
 
     def test_filter_non_py(self):
         self.assertFalse(self.modulegg.filter_non_py(self.dirpath))
-        pass
 
     def test_get_func_list(self):
-        pass
+        filepath = "./test_ModuleGraphGenerator.py"
+        func_array = ["test_ModuleGraphGenerator", "setUp", "tearDown", "test_init", "test_get_files", "test_get_graph", "test_filter_non_py", "test_get_func_list", "test_list_func_calls", "test_get_number_of_calls", "test_show_info"]
+        self.assertEqual(func_array,self.modulegg.get_func_list(filepath))
 
     def test_list_func_calls(self):
-        pass
+        filepath = "./test_ModuleGraphGenerator.py"
+        func_array2 = ['test_ModuleGraphGenerator',
+ 'setUp',
+ 'tearDown',
+ 'test_init',
+ 'test_get_files',
+ 'test_get_graph',
+ 'test_filter_non_py',
+ 'test_get_func_list',
+ 'test_list_func_calls',
+ 'test_get_number_of_calls',
+ 'test_show_info']
+        self.assertEqual(func_array2,self.modulegg.get_func_list(filepath))
 
     def test_get_number_of_calls(self):
         pass
