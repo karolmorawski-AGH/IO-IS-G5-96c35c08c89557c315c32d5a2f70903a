@@ -80,20 +80,20 @@ def main():
             print("\nGraph generated")
             input("Press enter to continue...")
         elif choice == "4":
-            graphSketcher.draw_file_method_graph()
-            print("\nGraph generated")
+            #graphSketcher.draw_file_method_graph()
+            print("\nNot implemented")
             input("Press enter to continue...")
         elif choice == "5":
             graphSketcher.draw_file_module_graph()
             print("\nGraph generated")
             input("Press enter to continue...")
         elif choice == "6":
-            graphSketcher.draw_method_module_graph()
-            print("\nGraph generated")
+            #graphSketcher.draw_method_module_graph()
+            print("\nNot implemented")
             input("Press enter to continue...")
         elif choice == "7":
-            graphSketcher.draw_file_method_module_graph()
-            print("\nGraph generated")
+            #graphSketcher.draw_file_method_module_graph()
+            print("\nNot implemented")
             input("Press enter to continue...")
         elif choice == "8":
             graphSketcher.draw_file_method_graph_direct()
@@ -104,5 +104,6 @@ def main():
         else:
             input("\nWrong input.\nPress enter to continue...")
 
-if __name__== "__main__":
+
+if __name__ == "__main__":
     main()
