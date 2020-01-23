@@ -16,6 +16,8 @@ class TestModuleGraphGenerator(unittest.TestCase):
         self.assertEqual(self.modulegg.dirpath, self.dirpath)
 
     def test_get_files(self):
+        file=[]
+        self.assertFalse(self.modulegg.get_files()==file)
         pass
 
     def test_get_graph(self):
