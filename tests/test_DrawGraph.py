@@ -1,7 +1,8 @@
 import unittest
 import sys
 sys.path.append('../')
-from src.ioproject import DrawGraph
+from src.ioproject.graph_sketcher import DrawGraph
+import src.ioproject.graph_sketcher as gs
 from src.ioproject import FileGraphGenerator
 
 class TestDrawGraph(unittest.TestCase):

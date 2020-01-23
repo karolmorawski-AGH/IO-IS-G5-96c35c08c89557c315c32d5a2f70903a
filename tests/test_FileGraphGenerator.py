@@ -2,7 +2,7 @@ import unittest
 import sys
 import os
 sys.path.append('../')
-from src.ioproject import FileGraphGenerator
+from src.ioproject.graph_generator import FileGraphGenerator
 class TestFileGraphGenerator(unittest.TestCase):
     dirpath = "./"
 
@@ -34,7 +34,7 @@ class TestFileGraphGenerator(unittest.TestCase):
         self.assertFalse(x==y)
 
     def test_count_func(self):
-        self.assertFalse(self.dirpath.count_func("test_DrawGraph.py")<0)
+        self.assertFalse(self.filegg.count_func("test_DrawGraph.py")<0)
 
 if __name__ == '__main__':
     unittest.main()

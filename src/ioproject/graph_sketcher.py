@@ -1,6 +1,6 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import graph_generator as gg
+import src.ioproject.graph_generator as gg
 import git
 from radon.complexity import cc_visit
 from radon.cli.tools import iter_filenames

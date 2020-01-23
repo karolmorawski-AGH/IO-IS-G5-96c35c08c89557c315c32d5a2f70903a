@@ -4,7 +4,7 @@ import sys
 from _ast import Call
 
 sys.path.append('../')
-from src.ioproject import FuncCallVisitor
+from src.ioproject.graph_generator import FuncCallVisitor
 from collections import deque
 
 
