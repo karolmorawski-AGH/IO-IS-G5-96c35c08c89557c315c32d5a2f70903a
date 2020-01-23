@@ -22,7 +22,7 @@ class TestFuncCallVisitor(unittest.TestCase):
     def test_name(self):
         self.funccv._name.append("foo")
         self.funccv._name.append("baz")
-        self.assertEqual(self.funccv.name, ".foobaz")
+        self.assertEqual(self.funccv.name, "foo.baz")
 
     def test_visit_Name(self):
         node = Call()
