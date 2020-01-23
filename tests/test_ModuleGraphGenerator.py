@@ -46,7 +46,9 @@ class TestModuleGraphGenerator(unittest.TestCase):
         self.assertEqual(func_array2,self.modulegg.get_func_list(filepath))
 
     def test_get_number_of_calls(self):
-        pass
+        t1= []
+        t2= []
+        self.assertTrue( self.modulegg.get_number_of_calls('assertFalse', 'test_init',t1,t2))
 
     def test_show_info(self):
         pass
