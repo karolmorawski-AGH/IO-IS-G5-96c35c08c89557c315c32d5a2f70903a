@@ -1,7 +1,7 @@
 import unittest
 import sys
 
-from _ast import Call
+from _ast import Call, Name
 
 sys.path.append('../')
 from src.ioproject.graph_generator import FuncCallVisitor
@@ -17,7 +17,7 @@ class TestFuncCallVisitor(unittest.TestCase):
         pass
 
     def test_init(self):
-        self.assertTrue(isinstance(self.funccv.name, deque))
+        self.assertTrue(isinstance(self.funccv._name, deque))
 
     def test_name(self):
         self.funccv._name.append("foo")
@@ -33,6 +33,12 @@ class TestFuncCallVisitor(unittest.TestCase):
     def test_visit_Attribute(self):
         node = Call()
         node.attr = "attr"
+        node.value = Name()
         node.value.id = "valueid"
-        self.funccv.visit_Name(node)
-        self.assertEqual("".join(self.funccv._name), "valueidattr")
+        self.funccv.visit_Attribute(node)
+
+        expected_deque = deque()
+        expected_deque.appendleft(node.attr)
+        expected_deque.appendleft(node.value.id)
+
+        self.assertEqual(self.funccv._name, expected_deque)
