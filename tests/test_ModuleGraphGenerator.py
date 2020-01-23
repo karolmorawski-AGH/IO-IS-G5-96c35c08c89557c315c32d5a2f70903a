@@ -21,9 +21,11 @@ class TestModuleGraphGenerator(unittest.TestCase):
         pass
 
     def test_get_graph(self):
+        self.assertTrue(self.modulegg.get_graph())
         pass
 
     def test_filter_non_py(self):
+        self.assertFalse(self.modulegg.filter_non_py(self.dirpath))
         pass
 
     def test_get_func_list(self):
