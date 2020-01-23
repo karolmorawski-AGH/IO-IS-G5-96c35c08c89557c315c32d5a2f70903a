@@ -6,7 +6,7 @@ import src.ioproject.graph_sketcher as gs
 from src.ioproject import FileGraphGenerator
 
 class TestDrawGraph(unittest.TestCase):
-    directory =gs.dirpath
+    directory ='./'
     if len(sys.argv) > 1:
         directory = sys.argv[1]
 
